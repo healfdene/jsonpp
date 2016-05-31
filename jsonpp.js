@@ -1,3 +1,5 @@
+const maxWidth = process.argv[2] || 80
+
 const stdin = process.stdin,
       stdout = process.stdout,
       inputChunks = []
@@ -19,7 +21,7 @@ stdin.on('end', function () {
 
 function prettyPrint(obj,indent) {
   const text = JSON.stringify(obj)
-  if(text.length < 80 || typeof obj === 'string') {
+  if((text + indent).length < maxWidth || typeof obj === 'string') {
     return text
   } else if(Object.keys(obj).length === 1) {
     // To stack object with a  single prop into one line:

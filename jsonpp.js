@@ -23,6 +23,12 @@ function prettyPrint(obj,indent) {
   const text = JSON.stringify(obj)
   if((text + indent).length < maxWidth || typeof obj === 'string') {
     return text
+  } else if(Array.isArray(obj)) {
+    const arr = []
+    for(const item of obj) {
+      arr.push(indent + prettyPrint(item,indent+'  '))
+    }
+    return '[\n' + arr.join(',\n') + '\n' + indent + ']'
   } else if(Object.keys(obj).length === 1) {
     // To stack object with a  single prop into one line:
     for(const prop in obj) {

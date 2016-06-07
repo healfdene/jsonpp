@@ -1,4 +1,6 @@
 const maxWidth = process.argv[2] || 80
+const sortProperties = Boolean(process.argv[3])
+const cloudFormationSort = (typeof process.argv[3] === 'string' && process.argv[3].toLowerCase() === 'cf')
 
 const stdin = process.stdin,
       stdout = process.stdout,
@@ -26,7 +28,7 @@ function prettyPrint(obj,indent) {
   } else if(Array.isArray(obj)) {
     const arr = []
     for(const item of obj) {
-      arr.push(indent + prettyPrint(item,indent+'  '))
+      arr.push(indent + '  ' + prettyPrint(item,indent+'  '))
     }
     return '[\n' + arr.join(',\n') + '\n' + indent + ']'
   } else if(Object.keys(obj).length === 1) {
@@ -36,7 +38,18 @@ function prettyPrint(obj,indent) {
     }
   } else {
     const arr = []
-    for(const prop in obj) {
+    let keys = Object.keys(obj)
+    if(sortProperties) {
+      keys.sort((a,b) => a.localeCompare(b))
+    }
+    if(cloudFormationSort) {
+      const index = keys.indexOf('Type')
+      if(index !== -1) {
+        keys.splice(index,1)
+        keys.unshift('Type')
+      }
+    }
+    for(const prop of keys) {
       arr.push(indent + '  "' + prop + '":' + prettyPrint(obj[prop],indent+'  '))
     }
     return '{\n' + arr.join(',\n') + '\n' + indent + '}'

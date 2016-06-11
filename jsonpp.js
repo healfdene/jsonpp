@@ -40,7 +40,7 @@ function prettyPrint(obj,indent) {
     const arr = []
     let keys = Object.keys(obj)
     if(sortProperties) {
-      keys.sort((a,b) => a.localeCompare(b))
+      keys.sort()
     }
     if(cloudFormationSort) {
       const index = keys.indexOf('Type')
